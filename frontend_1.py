@@ -11,7 +11,8 @@ import pikepdf
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QPixmap
 from PySide2.QtWidgets import QMessageBox, QFileDialog
-
+import fitz
+import cv2
 from images import logo
 import tempfile
 BASE_URL = 'http://127.0.0.1:8000'
@@ -85,6 +86,7 @@ class Ui_MainWindow(object):
                 self.pushButton_3.setText("")
                 self.pushButton_3.setIconSize(QtCore.QSize(11, 11))
                 self.pushButton_3.setObjectName("pushButton_3")
+                self.pushButton_3.clicked.connect(self.browseImage)
                 self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
                 self.pushButton_5.setGeometry(QtCore.QRect(550, 60, 101, 31))
                 self.pushButton_5.setStyleSheet("font: 87 8pt \"Arial Black\";")
@@ -309,6 +311,27 @@ class Ui_MainWindow(object):
                 self.label_31.setPixmap(pixmap)
                 self.label_31.setScaledContents(True)
 
+        def photoextraction(self, doc):
+
+                for i in range(len(doc)):
+                        for img in doc.getPageImageList(i):
+                                xref = img[0]
+                                pix = fitz.Pixmap(doc, xref)
+                                if pix.n < 1:
+                                        pix.writePNG(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+                                else:
+                                        pix1 = fitz.Pixmap(fitz.csRGB, pix)
+                                        pix1.writePNG(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+
+                                if (pix.width == 160 and pix.height == 200):
+                                        pixmap = QPixmap(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+                                        self.label_9.setPixmap(pixmap)
+                                        self.label_9.setScaledContents(True)
+
+                                elif (pix.width == 1000 and pix.height == 1000):
+                                        pixmap = QPixmap(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+                                        self.label_25.setPixmap(pixmap)
+                                        self.label_25.setScaledContents(True)
 
         def password(self):
                 r = self.lineEdit.text()
@@ -342,7 +365,7 @@ class Ui_MainWindow(object):
                 path = os.path.join(self.path, "image_full.png")
                 # cv2.imwrite(path,image_full)
 
-                self.photoextraction(r)
+                self.photoextraction(doc)
 
                 # self.paintEvent()
                 import requests
@@ -397,9 +420,9 @@ class Ui_MainWindow(object):
                 # self.label_24.setAlignment(Qt.AlignCenter)
                 self.topimage()
                 self.nextpagetop()
-                self.bottomimage()
+                #self.bottomimage()
                 self.nextpagebottomimage()
-                self.issuedate()
+                #self.issuedate()
                 # self.downloaddate()
                 print("take ss")
 

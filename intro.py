@@ -6,7 +6,6 @@ from backend.googlevision import upload_file_to_gs, async_detect_document, impor
 import re
 import tempfile
 import fitz
-import cv2
 
 
 app = FastAPI()
