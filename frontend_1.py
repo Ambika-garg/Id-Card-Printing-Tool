@@ -5,13 +5,16 @@
 # Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
-import os
-
+import numpy.core.multiarray
+import cv2
 import pikepdf
 from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtGui import QPixmap
-from PySide2.QtWidgets import QMessageBox, QFileDialog
-
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QPixmap, QImage, QPainter
+from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog,QPageSetupDialog
+from PySide2.QtWidgets import QMessageBox, QFileDialog, QDialog
+import fitz
+import os
 from images import logo
 import tempfile
 BASE_URL = 'http://127.0.0.1:8000'
@@ -85,6 +88,7 @@ class Ui_MainWindow(object):
                 self.pushButton_3.setText("")
                 self.pushButton_3.setIconSize(QtCore.QSize(11, 11))
                 self.pushButton_3.setObjectName("pushButton_3")
+                self.pushButton_3.clicked.connect(self.browseImage)
                 self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
                 self.pushButton_5.setGeometry(QtCore.QRect(550, 60, 101, 31))
                 self.pushButton_5.setStyleSheet("font: 87 8pt \"Arial Black\";")
@@ -97,6 +101,7 @@ class Ui_MainWindow(object):
                 self.pushButton_7.setGeometry(QtCore.QRect(660, 60, 101, 31))
                 self.pushButton_7.setStyleSheet("font: 87 8pt \"Arial Black\";")
                 self.pushButton_7.setObjectName("pushButton_7")
+                self.pushButton_7.clicked.connect(self.printpreviewDialog)
                 self.pushButton_8 = QtWidgets.QPushButton(self.centralwidget)
                 self.pushButton_8.setGeometry(QtCore.QRect(660, 100, 101, 31))
                 self.pushButton_8.setStyleSheet("font: 87 8pt \"Arial Black\";")
@@ -282,7 +287,7 @@ class Ui_MainWindow(object):
 
         def retranslateUi(self, MainWindow):
                 _translate = QtCore.QCoreApplication.translate
-                MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+                MainWindow.setWindowTitle(_translate("MainWindow", "TECHIDENTITY"))
                 self.label_4.setText(_translate("MainWindow", "Filename:"))
                 self.label_6.setText(_translate("MainWindow", "Password:"))
                 self.pushButton_5.setText(_translate("MainWindow", "Settings"))
@@ -309,6 +314,50 @@ class Ui_MainWindow(object):
                 self.label_31.setPixmap(pixmap)
                 self.label_31.setScaledContents(True)
 
+        def photoextraction(self, doc):
+
+                for i in range(len(doc)):
+                        for img in doc.getPageImageList(i):
+                                xref = img[0]
+                                pix = fitz.Pixmap(doc, xref)
+                                if pix.n < 1:
+                                        pix.writePNG(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+                                else:
+                                        pix1 = fitz.Pixmap(fitz.csRGB, pix)
+                                        pix1.writePNG(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+
+                                if (pix.width == 160 and pix.height == 200):
+                                        pixmap = QPixmap(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+                                        self.label_9.setPixmap(pixmap)
+                                        self.label_9.setScaledContents(True)
+
+                                elif (pix.width == 1000 and pix.height == 1000):
+                                        pixmap = QPixmap(os.path.join(self.path, "p%s-%s.png" % (i, xref)))
+                                        self.label_25.setPixmap(pixmap)
+                                        self.label_25.setScaledContents(True)
+
+        def setText_to_elements(self):
+
+                self.label_13.setText(self.text_ex['DOB'])
+                self.label_27.adjustSize()
+                self.label_10.setText(self.text_ex['namehindi'])
+                self.label_10.adjustSize()
+                self.label_12.setText(self.text_ex['gender string'])
+                self.label_12.adjustSize()
+                self.label_29.setText(self.text_ex['hindiAddress'])
+                self.label_30.setText("Address: " + "\n" + self.text_ex['engAddress'])
+                self.label_30.adjustSize()
+                self.label_27.setText(self.text_ex['Adhaar no'])
+                self.label_27.adjustSize()
+                if (self.text_ex['VID'] != None):
+                        self.label_23.setText("VID: " + self.text_ex['VID'])
+                        self.label_28.setText("VID: " + self.text_ex['VID'])
+                        self.label_28.adjustSize()
+                        self.label_28.setStyleSheet("border-top:0.5px solid rgb(220, 220, 220);")
+                self.label_22.adjustSize()
+                self.label_22.setStyleSheet("border-top:0.5px solid rgb(220, 220, 220);")
+                self.label_24.setText(self.text_ex['Adhaar no'])
+                self.label_24.adjustSize()
 
         def password(self):
                 r = self.lineEdit.text()
@@ -342,7 +391,7 @@ class Ui_MainWindow(object):
                 path = os.path.join(self.path, "image_full.png")
                 # cv2.imwrite(path,image_full)
 
-                self.photoextraction(r)
+
 
                 # self.paintEvent()
                 import requests
@@ -354,31 +403,19 @@ class Ui_MainWindow(object):
                 self.text_ex = data["text"]
                 print(self.text_ex)
 
-                self.label_28.setText(self.text_ex["DOB"])
+
                 # name = self.name_ex(r, path)
                 # self.text_ex["Name"] = name
                 # print("name", name)
                 # self.label_27.setText(self.text_ex["Name"])
-                self.label_27.adjustSize()
-                self.label_10.setText(self.text_ex['namehindi'])
-                self.label_10.adjustSize()
-                self.label_11.setText(self.text_ex['gender string'])
-                self.label_11.adjustSize()
-                self.label_29.setText(self.text_ex['hindiAddress'])
-                self.label_30.setText("Address: " + "\n" + self.text_ex['engAddress'])
-                self.label_30.adjustSize()
-                self.label_27.setText(self.text_ex['Adhaar no'])
-                self.label_27.adjustSize()
-                if (self.text_ex['VID'] != None):
-                        self.label_23.setText("VID: " + self.text_ex['VID'])
+                try:
+                        self.groupBox.setStyleSheet("background-color:rgb(255,255,255")
+                        self.groupBox_2.setStyleSheet("background-color:rgb(255,255,255")
+                        self.photoextraction(doc)
+                        self.setText_to_elements()
+                except:
+                        print("Sorry!response invalid")
 
-                self.label_22.adjustSize()
-                self.label_22.setStyleSheet("border-top:0.5px solid rgb(220, 220, 220);")
-                self.label_24.setText(self.text_ex['Adhaar no'])
-                self.label_24.adjustSize()
-                self.label_28.setText("VID: " + self.text_ex['VID'])
-                self.label_28.adjustSize()
-                self.label_28.setStyleSheet("border-top:0.5px solid rgb(220, 220, 220);")
                 # filename = "img02.png"
                 # fnt = ImageFont.truetype('arial.ttf', 15)
                 # # create new image
@@ -397,12 +434,12 @@ class Ui_MainWindow(object):
                 # self.label_24.setAlignment(Qt.AlignCenter)
                 self.topimage()
                 self.nextpagetop()
-                self.bottomimage()
-                self.nextpagebottomimage()
-                self.issuedate()
+                #self.bottomimage()
+                #self.nextpagebottomimage()
+                #self.issuedate()
                 # self.downloaddate()
                 print("take ss")
-
+                self.take_screenshot()
                 print("Restart your server!!")
 
         def showdialog(self):
@@ -428,7 +465,44 @@ class Ui_MainWindow(object):
 
                 pdffile = foldername[0]
                 self.lineEdit.setText(pdffile)
+                self.take_screenshot()
 
+        def printpreviewDialog(self):
+                printer = QPrinter(QPrinter.HighResolution)
+                previewDialog = QPrintPreviewDialog(printer, parent=None)
+                # previewDialog.paintRequested.connect(self.printPreview)
+                previewDialog.paintRequested.connect(self.printImage)
+                previewDialog.exec_()
+
+        def printImage(self, printer):
+                "Prints the current diagram"
+                self.image = QImage('test1.png')
+
+                # Create the printer
+                printerobject = QPrinter()
+                # Set the settings
+                printdialog = QPrintDialog(printerobject)
+                if printdialog.exec_() == QDialog.Accepted:
+                        painter = QPainter(printer)
+                        rect = painter.viewport()
+                        size = self.image.size()
+                        size.scale(rect.size(), Qt.KeepAspectRatio)
+                        painter.setViewport(rect.x(), rect.y(), size.width(), size.height())
+                        painter.setWindow(self.image.rect())
+                        painter.drawImage(0, 0, self.image)
+
+        def take_screenshot(self):
+                from PySide2 import QtCore as pyqt5c
+                from PySide2 import QtWidgets as pyqt5w
+
+                screen = pyqt5w.QApplication.primaryScreen()
+                pixmap = screen.grabWindow(self.groupBox.winId())
+
+                ba = pyqt5c.QByteArray()
+                buff = pyqt5c.QBuffer(ba)
+                pixmap = pixmap.scaled(500, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                pixmap.save('test1.png', 'PNG')
+                return ba.data()
 
 if __name__ == "__main__":
     import sys
