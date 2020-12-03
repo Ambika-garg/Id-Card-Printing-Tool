@@ -1,25 +1,19 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'frontend_1.ui'
-#
-# Created by: PyQt5 UI code generator 5.12.3
-#
-# WARNING! All changes made in this file will be lost!
-import numpy.core.multiarray
 import cv2
 import pikepdf
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QPixmap, QImage, QPainter
-from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog,QPageSetupDialog
-from PySide2.QtWidgets import QMessageBox, QFileDialog, QDialog
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QImage, QPainter
+from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
+from PyQt5.QtWidgets import QMessageBox, QFileDialog, QDialog
 import fitz
+from dialogboxes.settingsbox import *
+from dialogboxes.settingsbox import Ui_MainWindow1
+
 import os
-from images import logo
 import tempfile
 BASE_URL = 'http://127.0.0.1:8000'
 
-class Ui_MainWindow(object):
+class Ui_MainWindow(Ui_MainWindow1,QtWidgets.QWidget):
         def setupUi(self, MainWindow):
                 MainWindow.setObjectName("MainWindow")
                 MainWindow.resize(1024, 590)
@@ -185,7 +179,7 @@ class Ui_MainWindow(object):
                 self.label_15.setText("")
                 self.label_15.setObjectName("label_15")
                 self.label_16 = QtWidgets.QLabel(self.groupBox)
-                self.label_16.setGeometry(QtCore.QRect(0, 270, 491, 5))
+                self.label_16.setGeometry(QtCore.QRect(0, 270, 491, 2))
                 self.label_16.setStyleSheet("")
                 self.label_16.setText("")
                 self.label_16.setObjectName("label_16")
@@ -198,12 +192,12 @@ class Ui_MainWindow(object):
                 self.label_21.setText("")
                 self.label_21.setObjectName("label_21")
                 self.label_23 = QtWidgets.QLabel(self.groupBox)
-                self.label_23.setGeometry(QtCore.QRect(90, 250, 311, 21))
+                self.label_23.setGeometry(QtCore.QRect(90, 230, 311, 21))
                 self.label_23.setStyleSheet("")
                 self.label_23.setText("")
                 self.label_23.setObjectName("label_23")
                 self.label_24 = QtWidgets.QLabel(self.groupBox)
-                self.label_24.setGeometry(QtCore.QRect(90, 230, 311, 21))
+                self.label_24.setGeometry(QtCore.QRect(90, 220, 311, 21))
                 self.label_24.setStyleSheet("")
                 self.label_24.setText("")
                 self.label_24.setObjectName("label_24")
@@ -236,7 +230,7 @@ class Ui_MainWindow(object):
                 self.label_19.setText("")
                 self.label_19.setObjectName("label_19")
                 self.label_18 = QtWidgets.QLabel(self.groupBox_2)
-                self.label_18.setGeometry(QtCore.QRect(0, 262, 491, 8))
+                self.label_18.setGeometry(QtCore.QRect(0, 262, 491, 2))
                 self.label_18.setStyleSheet("")
                 self.label_18.setText("")
                 self.label_18.setObjectName("label_18")
@@ -260,7 +254,7 @@ class Ui_MainWindow(object):
                 self.label_27.setText("")
                 self.label_27.setObjectName("label_27")
                 self.label_28 = QtWidgets.QLabel(self.groupBox_2)
-                self.label_28.setGeometry(QtCore.QRect(70, 240, 261, 21))
+                self.label_28.setGeometry(QtCore.QRect(40, 240, 340, 50))
                 self.label_28.setStyleSheet("")
                 self.label_28.setText("")
                 self.label_28.setObjectName("label_28")
@@ -286,33 +280,38 @@ class Ui_MainWindow(object):
                 self.path = tempfile.mkdtemp()
 
         def retranslateUi(self, MainWindow):
-                _translate = QtCore.QCoreApplication.translate
-                MainWindow.setWindowTitle(_translate("MainWindow", "TECHIDENTITY"))
-                self.label_4.setText(_translate("MainWindow", "Filename:"))
-                self.label_6.setText(_translate("MainWindow", "Password:"))
-                self.pushButton_5.setText(_translate("MainWindow", "Settings"))
-                self.pushButton_6.setText(_translate("MainWindow", "Font"))
-                self.pushButton_7.setText(_translate("MainWindow", "Print"))
-                self.pushButton_8.setText(_translate("MainWindow", "Image Editor"))
-                self.pushButton_9.setText(_translate("MainWindow", "Report"))
-                self.pushButton_10.setText(_translate("MainWindow", "License"))
-                self.checkBox.setText(_translate("MainWindow", "PRINT FRONT"))
-                self.checkBox_2.setText(_translate("MainWindow", "PRINT BACK"))
+            _translate = QtCore.QCoreApplication.translate
+            MainWindow.setWindowTitle(_translate("MainWindow", "TECHIDENTITY"))
+            self.label_4.setText(_translate("MainWindow", "Filename:"))
+            self.label_6.setText(_translate("MainWindow", "Password:"))
+            self.pushButton_5.setText(_translate("MainWindow", "Settings"))
+
+            self.pushButton_6.setText(_translate("MainWindow", "Font"))
+            self.pushButton_7.setText(_translate("MainWindow", "Print"))
+            self.pushButton_8.setText(_translate("MainWindow", "Image Editor"))
+            # self.pushButton_8.clicked.connect(self.image_editor)
+            #self.pushButton_6.clicked.connect(self.openFontDialog)
+            self.pushButton_5.clicked.connect(self.open_settings)
+
+            self.pushButton_9.setText(_translate("MainWindow", "Report"))
+            self.pushButton_10.setText(_translate("MainWindow", "License"))
+            self.checkBox.setText(_translate("MainWindow", "PRINT FRONT"))
+            self.checkBox_2.setText(_translate("MainWindow", "PRINT BACK"))
 
         def topimage(self):
-                pixmap = QPixmap(r'images\Aadhar Back Side Top.jpg')
+                pixmap = QPixmap(r'C:\Users\91998\anaconda3\envs\visionAPIdemo\images\Ashok Stambh Front.png')
                 self.label_7.setPixmap(pixmap)
                 self.label_7.setScaledContents(True)
 
         def nextpagebottomimage(self):
-                pixmap = QPixmap('assets/rearpagefooter.jpeg')
-                self.label_33.setPixmap(pixmap)
-                self.label_33.setScaledContents(True)
+                pixmap = QPixmap(r'C:\Users\91998\anaconda3\envs\visionAPIdemo\images\Aadhar Back Side Top.jpg')
+                self.label_17.setPixmap(pixmap)
+                self.label_17.setScaledContents(True)
 
         def nextpagetop(self):
-                pixmap = QPixmap('assets/rearheader.png')
-                self.label_31.setPixmap(pixmap)
-                self.label_31.setScaledContents(True)
+                pixmap = QPixmap(r'C:\Users\91998\anaconda3\envs\visionAPIdemo\images\Back side Symbol.png')
+                self.label_19.setPixmap(pixmap)
+                self.label_19.setScaledContents(True)
 
         def photoextraction(self, doc):
 
@@ -337,7 +336,8 @@ class Ui_MainWindow(object):
                                         self.label_25.setScaledContents(True)
 
         def setText_to_elements(self):
-
+                myFont = QtGui.QFont()
+                myFont.setBold(True)
                 self.label_13.setText(self.text_ex['DOB'])
                 self.label_27.adjustSize()
                 self.label_10.setText(self.text_ex['namehindi'])
@@ -348,15 +348,23 @@ class Ui_MainWindow(object):
                 self.label_30.setText("Address: " + "\n" + self.text_ex['engAddress'])
                 self.label_30.adjustSize()
                 self.label_27.setText(self.text_ex['Adhaar no'])
+
+
+                self.label_27.setFont(myFont)
+
                 self.label_27.adjustSize()
                 if (self.text_ex['VID'] != None):
                         self.label_23.setText("VID: " + self.text_ex['VID'])
                         self.label_28.setText("VID: " + self.text_ex['VID'])
                         self.label_28.adjustSize()
                         self.label_28.setStyleSheet("border-top:0.5px solid rgb(220, 220, 220);")
+                        self.label_23.setFont(myFont)
+                        self.label_28.setFont(myFont)
+
                 self.label_22.adjustSize()
                 self.label_22.setStyleSheet("border-top:0.5px solid rgb(220, 220, 220);")
                 self.label_24.setText(self.text_ex['Adhaar no'])
+                self.label_24.setFont(myFont)
                 self.label_24.adjustSize()
 
         def password(self):
@@ -409,8 +417,8 @@ class Ui_MainWindow(object):
                 # print("name", name)
                 # self.label_27.setText(self.text_ex["Name"])
                 try:
-                        self.groupBox.setStyleSheet("background-color:rgb(255,255,255")
-                        self.groupBox_2.setStyleSheet("background-color:rgb(255,255,255")
+                        self.groupBox.setStyleSheet("background-color:rgb(255,255,255)")
+                        self.groupBox_2.setStyleSheet("background-color:rgb(255,255,255)")
                         self.photoextraction(doc)
                         self.setText_to_elements()
                 except:
@@ -433,9 +441,10 @@ class Ui_MainWindow(object):
                 # self.label_24.setScaledContents(True)
                 # self.label_24.setAlignment(Qt.AlignCenter)
                 self.topimage()
+                self.redline()
                 self.nextpagetop()
                 #self.bottomimage()
-                #self.nextpagebottomimage()
+                self.nextpagebottomimage()
                 #self.issuedate()
                 # self.downloaddate()
                 print("take ss")
@@ -492,8 +501,8 @@ class Ui_MainWindow(object):
                         painter.drawImage(0, 0, self.image)
 
         def take_screenshot(self):
-                from PySide2 import QtCore as pyqt5c
-                from PySide2 import QtWidgets as pyqt5w
+                from PyQt5 import QtCore as pyqt5c
+                from PyQt5 import QtWidgets as pyqt5w
 
                 screen = pyqt5w.QApplication.primaryScreen()
                 pixmap = screen.grabWindow(self.groupBox.winId())
@@ -503,6 +512,129 @@ class Ui_MainWindow(object):
                 pixmap = pixmap.scaled(500, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 pixmap.save('test1.png', 'PNG')
                 return ba.data()
+
+        def open_settings(self):
+                self.window = QtWidgets.QMainWindow()
+                self.ui = Ui_MainWindow1()
+                self.ui.setup(self.window)
+                self.ui.checkBox_15.setChecked(True)
+                self.ui.checkBox_15.toggled.connect(self.vid)
+                self.ui.checkBox_14.toggled.connect(self.phnno)
+                self.ui.checkBox_7.toggled.connect(self.barcode)
+                self.ui.checkBox_2.setChecked(True)
+                self.ui.checkBox_2.toggled.connect(self.frontpageheadermargin)
+                self.ui.checkBox_5.setChecked(True)
+                self.ui.checkBox_5.toggled.connect(self.RearPageFooterMargin)
+                self.ui.checkBox.setChecked(True)
+                self.ui.checkBox.toggled.connect(self.frontpageheader)
+                self.ui.checkBox_6.setChecked(True)
+                self.ui.checkBox_6.toggled.connect(self.rearpagefooter)
+                #self.ui.checkBox_10.setChecked(True)
+                self.ui.checkBox_10.toggled.connect(self.photoframe)
+                '''self.ui.checkBox.setChecked(True)
+                self.ui.checkBox.toggled.connect(self.FrontPageHeader)
+                self.ui.checkBox_15.setChecked(True)
+                self.ui.checkBox_15.toggled.connect(self.vid)
+                self.ui.checkBox_3.setChecked(True)
+                self.ui.checkBox_3.toggled.connect(self.FrontPageFooter)
+                self.ui.checkBox_4.setChecked(True)
+                self.ui.checkBox_4.toggled.connect(self.rearpageheader)
+                self.ui.checkBox_6.setChecked(True)
+                self.ui.checkBox_6.toggled.connect(self.rearpageFooter)
+                
+                
+                self.ui.checkBox_11.setChecked(True)
+                self.ui.checkBox_11.toggled.connect(self.dd)
+                self.take_screenshot()'''
+                self.window.show()
+
+        def vid(self):
+
+                if self.ui.checkBox_15.isChecked() == True:
+                        self.label_23.setText("VID: " + self.text_ex['VID'])
+                        self.label_28.setText("VID: " + self.text_ex['VID'])
+                        #self.label_23.setAlignment(Qt.AlignCenter)
+                        #self.label_28.setAlignment(Qt.AlignCenter)
+                else:
+                        self.label_23.clear()
+                        self.label_28.clear()
+
+        def frontpageheadermargin(self):
+
+                if self.ui.checkBox_2.isChecked() == True:
+                        pixmap = QPixmap(r'C:\Users\91998\anaconda3\envs\visionAPIdemo\images\Red Line.jpg')
+                        self.label_16.setPixmap(pixmap)
+                        self.label_16.setScaledContents(True)
+
+                else:
+                        self.label_16.clear()
+
+        def RearPageFooterMargin(self):
+
+                if self.ui.checkBox_5.isChecked() == True:
+                        pixmap = QPixmap(r'C:\Users\91998\anaconda3\envs\visionAPIdemo\images\Red Line.jpg')
+                        self.label_18.setPixmap(pixmap)
+                        self.label_18.setScaledContents(True)
+
+                else:
+                        self.label_18.clear()
+
+        def phnno(self):
+                if self.ui.checkBox_14.isChecked() == True:
+                        self.label_14.setText("Mobile No:" + self.text_ex['mobile no'])
+
+                else:
+                        self.label_14.clear()
+        def barcode(self):
+                sentence = self.text_ex['Adhaar no']
+                space = sentence.replace(" ", "")
+                number = space
+
+
+                import barcode
+                from barcode.writer import ImageWriter
+                ITF = barcode.get_barcode_class('itf')
+                itf = ITF(number, writer=ImageWriter())
+                fullname = itf.save('itf_barcode', options={"write_text": False})
+                if self.ui.checkBox_7.isChecked() == True:
+                        pixmap = QPixmap('itf_barcode.png')
+                        self.label_26.setPixmap(pixmap)
+                        self.label_26.setScaledContents(True)
+                        self.label_28.clear()
+                        self.label_27.clear()
+
+
+                else:
+                        self.label_26.clear()
+                        self.label_28.setText("VID: " + self.text_ex['VID'])
+                        self.label_27.setText(self.text_ex['Adhaar no'])
+
+        def photoframe(self):
+                if self.ui.checkBox_10.isChecked() == True:
+                        self.label_9.setStyleSheet("border: 2px solid black;")
+                else:
+                        self.label_9.setStyleSheet("border: 0px solid black;")
+
+        def redline(self):
+                pixmap = QPixmap(r'C:\Users\91998\anaconda3\envs\visionAPIdemo\images\Red Line.jpg')
+                self.label_16.setPixmap(pixmap)
+                self.label_16.setScaledContents(True)
+
+                self.label_18.setPixmap(pixmap)
+                self.label_18.setScaledContents(True)
+
+        def frontpageheader(self):
+                if self.ui.checkBox.isChecked() == True:
+                        self.topimage()
+                else:
+                        self.label_7.clear()
+
+        def rearpagefooter(self):
+                if self.ui.checkBox_6.isChecked() == True:
+                        self.nextpagetop()
+                else:
+                        self.label_19.clear()
+
 
 if __name__ == "__main__":
     import sys
