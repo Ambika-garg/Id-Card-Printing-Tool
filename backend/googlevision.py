@@ -1,20 +1,13 @@
-
 """OCR with PDF/TIFF as source files on GCS"""
 import json
-import re
 import os
-from google.cloud import vision
-from google.cloud import vision
-from google.cloud import storage
+import re
 import traceback
-from tempfile import NamedTemporaryFile
-from fastapi import UploadFile
-from pathlib import Path
-import shutil
 
-from json.decoder import JSONDecoder
+from google.cloud import storage
+from google.cloud import vision
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'backend/ServiceAccounttoken.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'backend/focus-sequencer-293417-50218e580033.json'
 # gs://amul/aadhar cards (2).pdf
 client = vision.ImageAnnotatorClient()
 batch_size = 2
@@ -22,14 +15,14 @@ mime_type = 'application/pdf'
 # gcs_source_uri='gs://amul/aadhar cards (8).pdf'
 
 storage_client = storage.Client()
-bucket = storage_client.get_bucket('amul')
+bucket = storage_client.get_bucket('harshitgoel')
 
 
 
 def upload_file_to_gs(file, filename):
     blob = bucket.blob(filename)
     blob.upload_from_file(file)
-    return "gs://amul/"+blob.name
+    return 'gs://harshitgoel/' + blob.name
 
 
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
