@@ -81,3 +81,4 @@ typing-inspect==0.6.0
 urllib3==1.25.11
 uvicorn==0.12.3
 wincertstore==0.2
+gunicorn==20.0.4
