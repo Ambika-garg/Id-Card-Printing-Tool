@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 cachetools==4.1.1
 certifi==2020.6.20
 cffi==1.14.4
@@ -83,7 +83,6 @@ urllib3==1.25.11
 uvicorn==0.12.3
 wincertstore==0.2
 gunicorn==20.0.4
-=======
 cachetools==4.1.1
 certifi==2020.6.20
 cffi==1.14.4
@@ -167,4 +166,4 @@ typing-inspect==0.6.0
 urllib3==1.25.11
 uvicorn==0.12.3
 wincertstore==0.2
->>>>>>> 0533aae1f33aad2d21650f693a64b08d10c862eb
+
