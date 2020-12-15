@@ -1,5 +1,5 @@
 import pyrebase
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 from pydantic import BaseModel
 
 from backend.googlevision import upload_file_to_gs, async_detect_document
@@ -39,8 +39,14 @@ def create_upload_item(pdf: UploadFile = File(...)):
 
     return {'input_path': input_path, 'output_path': output_path, 'text': text}
 
+@app.get("/Customer_issues/")
+def get_customer_issue(email:str, message:str,  request:Request):
+    client_host = request.client.host
+    return {"client_host":client_host, email:str, message:str}
+
 
 def database(text):
 
-    data = {"Name": text}
+    data = {"Adhar card detail": text}
     db.child("data").push(data)
+

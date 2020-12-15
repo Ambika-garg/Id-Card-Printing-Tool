@@ -2,6 +2,8 @@ import smtplib as s
 
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtWidgets import QMessageBox
+import requests
+BASE_URL = 'https://techidentity.herokuapp.com'
 
 
 class Ui_MainWindow3(object):
@@ -117,16 +119,22 @@ class Ui_MainWindow3(object):
             ob = s.SMTP('smtp.gmail.com', 587)
             password = self.lineEdit_2.text()
             email = self.label_6.text()
-            ob.starttls()
-            ob.login(email, password)
+            # ob.starttls()
+            # ob.login(email, password)
             subject = "sending email using python"
             body = self.lineEdit_3.text()
             message = "Subject:{}\n\n{}".format(subject, body)
-
-            ob.sendmail("ambika.garg3@aiesec.net", 'techidentity1234@gmail.com', message)
-            print("send successfully...")
-            ob.quit()
-        except Exception:
+            if email !="" and message != "":
+                myobj = {'email': email, 'message':message}
+                res = requests.post(BASE_URL,'/Customer_issues/email',email)
+                print(res.json())
+                res1 = requests.post(BASE_URL, '/Customer_issues/message', message)
+                print(res1.json())
+            # ob.sendmail("ambika.garg3@aiesec.net", 'techidentity1234@gmail.com', message)
+            # print("send successfully...")
+            # ob.quit()
+        except Exception as e:
+            print(e)
             self.showdialog()
 
 
