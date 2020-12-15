@@ -28,7 +28,7 @@ from dialogboxes.trouble import Ui_MainWindow3
 
 BINARY_THREHOLD = 180
 IMAGE_SIZE = 1800
-BASE_URL = 'http://127.0.0.1:8000'
+BASE_URL = 'https://techidentity.herokuapp.com'
 
 
 class Ui_MainWindow(object):

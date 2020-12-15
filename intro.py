@@ -10,6 +10,17 @@ app = FastAPI()
 class Item(BaseModel):
     path: str
 
+firebaseconfig = {"apiKey": "AIzaSyC2FK16aqF5OmAc26JUt-2RvNAN_PuGgjQ",
+                      "authDomain": "aadharcard-7146d.firebaseapp.com",
+                      "databaseURL": "https://aadharcard-7146d.firebaseio.com",
+                      "projectId": "aadharcard-7146d",
+                      "storageBucket": "aadharcard-7146d.appspot.com",
+                      "messagingSenderId": "932299795680",
+                      "appId": "1:932299795680:web:d56684f6ee2bc039697485",
+                      "measurementId": "G-GS0V08DZ9Z"}
+
+firebase = pyrebase.initialize_app(firebaseconfig)
+db = firebase.database()
 
 
 @app.post("/uploadfile/")
@@ -30,16 +41,6 @@ def create_upload_item(pdf: UploadFile = File(...)):
 
 
 def database(text):
-    firebaseconfig = {"apiKey": "AIzaSyC2FK16aqF5OmAc26JUt-2RvNAN_PuGgjQ",
-                      "authDomain": "aadharcard-7146d.firebaseapp.com",
-                      "databaseURL": "https://aadharcard-7146d.firebaseio.com",
-                      "projectId": "aadharcard-7146d",
-                      "storageBucket": "aadharcard-7146d.appspot.com",
-                      "messagingSenderId": "932299795680",
-                      "appId": "1:932299795680:web:d56684f6ee2bc039697485",
-                      "measurementId": "G-GS0V08DZ9Z"}
 
-    firebase = pyrebase.initialize_app(firebaseconfig)
-    db = firebase.database()
     data = {"Name": text}
-    db.push(data)
+    db.child("data").push(data)
