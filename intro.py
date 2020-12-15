@@ -34,7 +34,7 @@ def create_upload_item(pdf: UploadFile = File(...)):
 
     text = async_detect_document(input_path, output_path)
     print(text)
-    # database(text)
+    database(text)
     # config to database
 
     return {'input_path': input_path, 'output_path': output_path, 'text': text}
