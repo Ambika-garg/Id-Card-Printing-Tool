@@ -3,6 +3,7 @@ import smtplib as s
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtWidgets import QMessageBox
 import requests
+
 BASE_URL = 'https://techidentity.herokuapp.com'
 
 
@@ -124,12 +125,11 @@ class Ui_MainWindow3(object):
             subject = "sending email using python"
             body = self.lineEdit_3.text()
             message = "Subject:{}\n\n{}".format(subject, body)
-            if email !="" and message != "":
-                myobj = {'email': email, 'message':message}
-                res = requests.post(BASE_URL,'/Customer_issues/email',email)
-                print(res.json())
-                res1 = requests.post(BASE_URL, '/Customer_issues/message', message)
-                print(res1.json())
+            myobj = {'email': email}
+            res = requests.post(BASE_URL, '/Customer_issues/email', data = myobj)
+            print(res.text)
+
+
             # ob.sendmail("ambika.garg3@aiesec.net", 'techidentity1234@gmail.com', message)
             # print("send successfully...")
             # ob.quit()
