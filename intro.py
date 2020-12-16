@@ -42,6 +42,7 @@ def create_upload_item(pdf: UploadFile = File(...)):
 
 @app.post("/Customer_issues/")
 def get_customer_issue(item:issue):
+    print(item)
     return item
 
 def database(text):
