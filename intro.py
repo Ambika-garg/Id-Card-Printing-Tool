@@ -44,7 +44,7 @@ class issue(BaseModel):
 
 @app.post("/Customer_issues/")
 def get_customer_issue(item:issue):
-    return item
+    return [item.email, item.message]
 
 def database(text):
 
