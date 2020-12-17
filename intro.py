@@ -7,10 +7,6 @@ from backend.googlevision import upload_file_to_gs, async_detect_document
 app = FastAPI()
 
 
-class issue(BaseModel):
-    email: str
-    message: str
-
 firebaseconfig = {"apiKey": "AIzaSyC2FK16aqF5OmAc26JUt-2RvNAN_PuGgjQ",
                       "authDomain": "aadharcard-7146d.firebaseapp.com",
                       "databaseURL": "https://aadharcard-7146d.firebaseio.com",
@@ -40,9 +36,14 @@ def create_upload_item(pdf: UploadFile = File(...)):
 
     return {'input_path': input_path, 'output_path': output_path, 'text': text}
 
+
+class issue(BaseModel):
+    email: str
+    message: str
+
+
 @app.post("/Customer_issues/")
 def get_customer_issue(item:issue):
-    print(item)
     return item
 
 def database(text):
