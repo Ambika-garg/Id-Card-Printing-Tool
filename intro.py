@@ -6,15 +6,14 @@ from backend.googlevision import upload_file_to_gs, async_detect_document
 
 app = FastAPI()
 
-
 firebaseconfig = {"apiKey": "AIzaSyC2FK16aqF5OmAc26JUt-2RvNAN_PuGgjQ",
-                      "authDomain": "aadharcard-7146d.firebaseapp.com",
-                      "databaseURL": "https://aadharcard-7146d.firebaseio.com",
-                      "projectId": "aadharcard-7146d",
-                      "storageBucket": "aadharcard-7146d.appspot.com",
-                      "messagingSenderId": "932299795680",
-                      "appId": "1:932299795680:web:d56684f6ee2bc039697485",
-                      "measurementId": "G-GS0V08DZ9Z"}
+                  "authDomain": "aadharcard-7146d.firebaseapp.com",
+                  "databaseURL": "https://aadharcard-7146d.firebaseio.com",
+                  "projectId": "aadharcard-7146d",
+                  "storageBucket": "aadharcard-7146d.appspot.com",
+                  "messagingSenderId": "932299795680",
+                  "appId": "1:932299795680:web:d56684f6ee2bc039697485",
+                  "measurementId": "G-GS0V08DZ9Z"}
 
 firebase = pyrebase.initialize_app(firebaseconfig)
 db = firebase.database()
@@ -43,11 +42,10 @@ class issue(BaseModel):
 
 
 @app.post("/Customer_issues/")
-def get_customer_issue(item:issue):
+def get_customer_issue(item: issue):
+    print([item.email, item.message])
     return [item.email, item.message]
 
 def database(text):
-
     data = {"Adhar card detail": text}
     db.child("data").push(data)
-

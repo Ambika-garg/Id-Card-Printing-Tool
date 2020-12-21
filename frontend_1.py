@@ -10,6 +10,7 @@ import tempfile
 # WARNING! All changes made in this file will be lost!
 from difflib import get_close_matches
 
+import webbrowser
 import cv2
 import fitz
 import pikepdf
@@ -18,13 +19,13 @@ import requests
 from PIL import Image, ImageFont, ImageDraw
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import Qt
-from PySide2.QtGui import QPixmap, QImage, QPainter, QFont, QTransform
+from PySide2.QtGui import QPixmap, QImage, QPainter, QFont, QTransform, QIcon
 from PySide2.QtPrintSupport import QPrinter, QPrintPreviewDialog, QPrintDialog
 from PySide2.QtWidgets import QMessageBox, QFileDialog, QDialog, QFontDialog
 
 from dialogboxes.resize import Ui_MainWindow9
 from dialogboxes.settingsbox import Ui_MainWindow1
-from dialogboxes.trouble import Ui_MainWindow3
+from dialogboxes.trouble1 import Ui_MainWindow3
 
 BINARY_THREHOLD = 180
 IMAGE_SIZE = 1800
@@ -51,14 +52,18 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(950, 10, 31, 31))
-        self.pushButton.setStyleSheet("border-image: url(:/newPrefix/help.png);")
+        self.pushButton.setStyleSheet("Background-color:rgb(255,251,549)")
+        self.pushButton.setIcon(QIcon('images\help.png'))
         self.pushButton.setText("")
+
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(910, 10, 31, 31))
-        self.pushButton_2.setStyleSheet("border-image: url(:/newPrefix/contact.jpg);")
+        self.pushButton_2.setStyleSheet('Background-color:rgb(0,10,5)')
         self.pushButton_2.setText("")
+        self.pushButton_2.setIcon(QIcon('images\contact.png'))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.clicked.connect(self.contact)
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(180, 50, 341, 91))
         self.label_2.setStyleSheet("border: 2px solid black;\n"
@@ -93,15 +98,20 @@ class Ui_MainWindow(object):
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(470, 100, 31, 21))
-        self.pushButton_4.setStyleSheet("border-image: url(:/newPrefix/submit.png);")
+        self.pushButton_4.setStyleSheet("")
+        icon1 = QtGui.QPixmap(r'D:\finalapp\images\submit.png')
+        self.pushButton_4.setIcon(icon1)
+        self.pushButton_4.setIconSize(QtCore.QSize(11, 11))
         self.pushButton_4.setText("")
         self.pushButton_4.setObjectName("pushButton_4")
         self.pushButton_4.clicked.connect(self.password)
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(470, 70, 31, 21))
-        self.pushButton_3.setAutoFillBackground(False)
-        self.pushButton_3.setStyleSheet("border-image: url(:/newPrefix/file.jpg);")
+        self.pushButton_3.setAutoFillBackground(True)
+        icon = QtGui.QPixmap(r'D:\finalapp\images\file.jpg')
+        self.pushButton_3.setStyleSheet("")
         self.pushButton_3.setText("")
+        self.pushButton_3.setIcon(icon)
         self.pushButton_3.setIconSize(QtCore.QSize(11, 11))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.clicked.connect(self.browseImage)
@@ -139,7 +149,7 @@ class Ui_MainWindow(object):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
-        self.checkBox = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBox = QtWidgets.QRadioButton(self.centralwidget)
         self.checkBox.setGeometry(QtCore.QRect(20, 540, 121, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -147,10 +157,10 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.checkBox.setFont(font)
         self.checkBox.setObjectName("checkBox")
-        self.checkBox.stateChanged.connect(self.clickBox)
-        self.checkBox_2 = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBox.toggled.connect(self.clickBox)
+        self.checkBox_2 = QtWidgets.QRadioButton(self.centralwidget)
         self.checkBox_2.setGeometry(QtCore.QRect(880, 540, 121, 21))
-        self.checkBox_2.stateChanged.connect(self.clickBox2)
+        self.checkBox_2.toggled.connect(self.clickBox2)
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -167,7 +177,7 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.label_7 = QtWidgets.QLabel(self.groupBox)
-        self.label_7.setGeometry(QtCore.QRect(0, 0, 491, 53))
+        self.label_7.setGeometry(QtCore.QRect(30, 0, 451, 61))
         self.label_7.setStyleSheet("")
         self.label_7.setText("")
         self.label_7.setObjectName("label_7")
@@ -207,7 +217,7 @@ class Ui_MainWindow(object):
         self.label_15.setText("")
         self.label_15.setObjectName("label_15")
         self.label_16 = QtWidgets.QLabel(self.groupBox)
-        self.label_16.setGeometry(QtCore.QRect(0, 267, 491, 5))
+        self.label_16.setGeometry(QtCore.QRect(0, 265, 491, 5))
         self.label_16.setStyleSheet("")
         self.label_16.setText("")
         self.label_16.setObjectName("label_16")
@@ -220,13 +230,13 @@ class Ui_MainWindow(object):
         self.label_21.setText("")
         self.label_21.setObjectName("label_21")
         self.label_23 = QtWidgets.QLabel(self.groupBox)
-        self.label_23.setGeometry(QtCore.QRect(90, 246, 311, 23))
+        self.label_23.setGeometry(QtCore.QRect(90, 242, 311, 23))
         self.label_23.setStyleSheet("font-size:12")
         self.label_23.setFont(QFont('Arial', 12, weight=QtGui.QFont.Bold))
         self.label_23.setObjectName("label_23")
         self.label_23.setAlignment(Qt.AlignAbsolute)
         self.label_24 = QtWidgets.QLabel(self.groupBox)
-        self.label_24.setGeometry(QtCore.QRect(110, 222, 311, 23))
+        self.label_24.setGeometry(QtCore.QRect(110, 219, 311, 23))
         self.label_24.setStyleSheet("font-size:15")
         self.label_24.setFont(QFont('Arial', 12, weight=QtGui.QFont.Bold))
         self.label_24.setObjectName("label_24")
@@ -255,7 +265,7 @@ class Ui_MainWindow(object):
         self.label_17.setText("")
         self.label_17.setObjectName("label_17")
         self.label_19 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_19.setGeometry(QtCore.QRect(0, 269, 491, 31))
+        self.label_19.setGeometry(QtCore.QRect(10, 269, 471, 31))
         self.label_19.setStyleSheet("")
         self.label_19.setText("")
         self.label_19.setObjectName("label_19")
@@ -274,7 +284,7 @@ class Ui_MainWindow(object):
         self.label_25.setText("")
         self.label_25.setObjectName("label_25")
         self.label_26 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_26.setGeometry(QtCore.QRect(330, 220, 161, 21))
+        self.label_26.setGeometry(QtCore.QRect(330, 220, 161, 31))
         self.label_26.setStyleSheet("")
         self.label_26.setText("")
         self.label_26.setObjectName("label_26")
@@ -316,32 +326,39 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Aapki Pehchaan"))
         self.label_4.setText(_translate("MainWindow", "Filename:"))
+        self.label_4.adjustSize()
         self.label_6.setText(_translate("MainWindow", "Password:"))
-        self.pushButton_5.setText(_translate("MainWindow", "Settings"))
-        self.pushButton_6.setText(_translate("MainWindow", "Font"))
-        self.pushButton_7.setText(_translate("MainWindow", "Print"))
-        self.pushButton_8.setText(_translate("MainWindow", "Resize"))
-        self.pushButton_9.setText(_translate("MainWindow", "Report"))
-        self.pushButton_10.setText(_translate("MainWindow", "License"))
+        self.label_6.adjustSize()
+        self.pushButton_5.setText(_translate("MainWindow", "SETTINGS"))
+        self.pushButton_6.setText(_translate("MainWindow", "FONT"))
+        self.pushButton_7.setText(_translate("MainWindow", "PRINT"))
+        self.pushButton_8.setText(_translate("MainWindow", "RESIZE"))
+        self.pushButton_9.setText(_translate("MainWindow", "REPORT"))
+        self.pushButton_10.setText(_translate("MainWindow", "LICENSE"))
         self.checkBox.setText(_translate("MainWindow", "PRINT FRONT"))
+        self.checkBox.adjustSize()
         self.checkBox_2.setText(_translate("MainWindow", "PRINT BACK"))
+        self.checkBox_2.adjustSize()
 
     def clickBox(self, state):
-        if state == QtCore.Qt.Checked:
+        if state:
             print('Checked')
             self.take_screenshot()
         else:
             print('Unchecked')
 
     def clickBox2(self, state):
-        if state == QtCore.Qt.Checked:
+        if state:
             print('Checked')
             self.take_screenshot2()
         else:
             print('Unchecked')
 
+    def contact(self):
+        webbrowser.open("https://mltool.in/contact")
+
     def topimage(self):
-        pixmap = QPixmap(r'images/Ashok Stambh Front.png')
+        pixmap = QPixmap(r'D:\finalapp\images\Ashok Stambh Front.png')
         self.label_7.setPixmap(pixmap)
         self.label_7.setScaledContents(True)
 
@@ -407,7 +424,7 @@ class Ui_MainWindow(object):
         if pwd != "":
             try:
                 mypdf = pikepdf.open(r, pwd)
-                r = os.path.join(self.path, "/pdffile", r, "unlocked.pdf")
+                r = os.path.join(self.path, "unlocked.pdf")
                 mypdf.save(r)
             except pikepdf._qpdf.PasswordError:
                 print("hi")

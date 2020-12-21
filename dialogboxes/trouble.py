@@ -125,10 +125,9 @@ class Ui_MainWindow3(object):
             subject = "sending email using python"
             body = self.lineEdit_3.text()
             message = "Subject:{}\n\n{}".format(subject, body)
-            myobj = {'email': email, "message":message}
-            res = requests.post(BASE_URL + '/Customer_issues/', data = myobj)
-            print(res.json())
-
+            myobj = {"email": email, "message": message}
+            res = requests.post(BASE_URL + '/Customer_issues/', data=myobj)
+            print(res.text)
 
             # ob.sendmail("ambika.garg3@aiesec.net", 'techidentity1234@gmail.com', message)
             # print("send successfully...")
