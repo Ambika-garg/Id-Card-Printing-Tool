@@ -9,6 +9,14 @@
 2. Create exe
 
     `pyinstaller --icon="images\logo.ico" index.py --onefile`
+    
+    
+# Video:
+
+
+https://user-images.githubusercontent.com/70703123/129664471-27021668-b995-4967-b066-5e8e46b8b6bf.mp4
+
+
 
 ## References
 
